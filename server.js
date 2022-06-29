@@ -2,6 +2,7 @@ import express from "express";
 const app = express();
 import dotenv from "dotenv";
 dotenv.config();
+import "express-async-errors";
 
 //routers
 import authRouter from "./routes/authRoutes.js";
