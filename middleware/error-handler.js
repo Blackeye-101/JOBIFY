@@ -1,11 +1,25 @@
 import { StatusCodes } from "http-status-codes";
 const errorHandlerMiddleware = (err, req, res, next) => {
-  console.log(err);
+  console.log(err.message);
   const defaultError = {
-    statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-    msg: "something went wrong, try again later",
+    statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
+    msg: err.message || "something went wrong, try again later",
   };
-  res.status(defaultError.statusCode).send({ msg: err });
+  if (err.name === "ValidationError") {
+    defaultError.statusCode = StatusCodes.BAD_REQUEST;
+    // defaultError.msg = err.message;
+    defaultError.msg = Object.values(err.errors)
+      .map((item) => item.message)
+      .join(",");
+  }
+  if (err.code && err.code === 11000) {
+    defaultError.statusCode = StatusCodes.BAD_REQUEST;
+    defaultError.msg = `User with this ${Object.keys(
+      err.keyValue
+    )} already exists`;
+  }
+  // res.status(defaultError.statusCode).send({ msg: err });
+  res.status(defaultError.statusCode).send({ msg: defaultError.msg });
 };
 
 export default errorHandlerMiddleware;
