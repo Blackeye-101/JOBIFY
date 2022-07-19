@@ -23,6 +23,7 @@ import {
   EDIT_JOB_SUCCESS,
   SHOW_STATS_BEGIN,
   SHOW_STATS_SUCCESS,
+  CLEAR_FILTERS,
 } from "./actions";
 import { initialState } from "./appContext";
 
@@ -216,6 +217,15 @@ const reducer = (state, action) => {
     };
   }
 
+  if (action.type === CLEAR_FILTERS) {
+    return {
+      ...state,
+      search: "",
+      sort: "latest",
+      searchType: "all",
+      searchStatus: "all",
+    };
+  }
   throw new Error(`No such action : ${action.type}`);
 };
 

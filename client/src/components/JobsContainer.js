@@ -5,11 +5,25 @@ import Loading from "./Loading";
 import Wrapper from "../assets/wrappers/JobsContainer";
 
 const JobsContainer = () => {
-  const { getJobs, jobs, isLoading, page, totalJobs } = useAppContext();
+  const {
+    getJobs,
+    jobs,
+    isLoading,
+    page,
+    totalJobs,
+    search,
+    sort,
+    searchType,
+    searchStatus,
+  } = useAppContext();
 
   useEffect(() => {
-    getJobs();
-  }, []);
+    const delayForTyping = setTimeout(() => {
+      getJobs();
+    }, 1000);
+
+    return () => clearTimeout(delayForTyping);
+  }, [search, sort, searchType, searchStatus]);
 
   if (isLoading) {
     return <Loading center></Loading>;
